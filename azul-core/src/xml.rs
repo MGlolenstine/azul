@@ -1150,6 +1150,8 @@ pub fn get_item<'a>(hierarchy: &[usize], root_node: &'a mut XmlNode) -> Option<&
     // the borrow checker doesn't allow recursive mutable borrowing
     let node_ptr = current_node as *const XmlNode;
     let mut_node_ptr = node_ptr as *mut XmlNode;
+
+    #[allow(invalid_reference_casting)]
     Some(unsafe { &mut *mut_node_ptr }) // safe because we hold a &'a mut XmlNode
 }
 

@@ -19,3 +19,4 @@ api/c/main/
 LICENSE-WINDOWS.json
 LICENSE-LINUX.json
 LICENSE-MAC.json
+.direnv/
