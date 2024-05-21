@@ -1060,9 +1060,9 @@ impl CallbacksOfHitTest {
                 let mut callbacks = BTreeMap::new();
                 for cbtc in callbacks_filter_list {
                     callbacks
-                    .entry(cbtc.node_id)
-                    .or_insert_with(|| Vec::new())
-                    .push((cbtc.hit_test_item, cbtc.event_filter));
+                        .entry(cbtc.node_id)
+                        .or_insert_with(|| Vec::new())
+                        .push((cbtc.hit_test_item, cbtc.event_filter));
                 }
                 let callbacks = callbacks;
                 let mut empty_vec = Vec::new();
@@ -1083,7 +1083,9 @@ impl CallbacksOfHitTest {
                         .unwrap()
                         .az_children(&lr.styled_dom.node_hierarchy.as_container())
                     {
-                        for (hit_test_item, event_filter) in callbacks.get(&child_id).unwrap_or(&empty_vec) {
+                        for (hit_test_item, event_filter) in
+                            callbacks.get(&child_id).unwrap_or(&empty_vec)
+                        {
                             if blacklisted_event_types.contains(&*event_filter) {
                                 continue;
                             }
@@ -1168,14 +1170,19 @@ impl CallbacksOfHitTest {
                 }
 
                 // run the callbacks for node ID 0
+                #[allow(clippy::never_loop)]
                 loop {
                     for ((hit_test_item, event_filter), root_id) in lr
                         .styled_dom
                         .root
                         .into_crate_internal()
                         .map(|root_id| {
-                            callbacks.get(&root_id).unwrap_or(&empty_vec).iter()
-                            .map(|item| (item, root_id)).collect::<Vec<_>>()
+                            callbacks
+                                .get(&root_id)
+                                .unwrap_or(&empty_vec)
+                                .iter()
+                                .map(|item| (item, root_id))
+                                .collect::<Vec<_>>()
                         })
                         .unwrap_or_default()
                     {
@@ -1263,7 +1270,6 @@ impl CallbacksOfHitTest {
                     break;
                 }
             }
-
         }
 
         // Scroll nodes from programmatic callbacks

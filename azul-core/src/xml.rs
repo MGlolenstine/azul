@@ -528,15 +528,15 @@ impl DomXml {
     /// let dom = DomXml::mock("<div id='test' />");
     /// dom.assert_eq(Dom::div().with_id("test"));
     /// ```
-    #[cfg(test)]
-    pub fn assert_eq(self, other: StyledDom) {
-        let fixed = StyledDom::body().append(other);
-        if self.parsed_dom != fixed {
-            panic!("\r\nExpected DOM did not match:\r\n\r\nexpected: ----------\r\n{}\r\ngot: ----------\r\n{}\r\n",
-                expected.get_html_string(), fixed.get_html_string()
-            );
-        }
-    }
+    // #[cfg(test)]
+    // pub fn assert_eq(self, other: StyledDom) {
+    //     let fixed = StyledDom::default().append_child(other);
+    //     if self.parsed_dom != fixed {
+    //         panic!("\r\nExpected DOM did not match:\r\n\r\nexpected: ----------\r\n{}\r\ngot: ----------\r\n{}\r\n",
+    //             self.parsed_dom.get_html_string("", "", false), fixed.get_html_string("","", false)
+    //         );
+    //     }
+    // }
 
     pub fn into_styled_dom(self) -> StyledDom {
         self.into()
@@ -2666,18 +2666,16 @@ impl XmlComponent for DynamicXmlComponent {
 }
 
 // -- Tests
-#[cfg(test)]
+#[cfg(all(test, feature = "xml"))]
 mod tests {
 
     use super::*;
 
     #[test]
     fn test_compile_dom_1() {
-        use crate::Dummy;
-
         // Test the output of a certain component
         fn test_component_source_code(input: &str, component_name: &str, expected: &str) {
-            let mut component_map = XmlComponentMap::<Dummy>::default();
+            let mut component_map = XmlComponentMap::default();
             let root_nodes = parse_xml_string(input).unwrap();
             get_xml_components(&root_nodes, &mut component_map).unwrap();
             let body_node = get_body_node(&root_nodes).unwrap();
@@ -2695,7 +2693,7 @@ mod tests {
         }
 
         fn test_app_source_code(input: &str, expected: &str) {
-            let mut component_map = XmlComponentMap::<Dummy>::default();
+            let mut component_map = XmlComponentMap::default();
             let root_nodes = parse_xml_string(input).unwrap();
             get_xml_components(&root_nodes, &mut component_map).unwrap();
             let body_node = get_body_node(&root_nodes).unwrap();

@@ -18,8 +18,9 @@
             cargo
             rustc
             rustfmt
-            pre-commit
+            rust-analyzer
             rustPackages.clippy
+
             python3
             cmake
           ];

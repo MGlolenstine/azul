@@ -279,7 +279,7 @@ impl RefAny {
                 ptr::copy_nonoverlapping(
                     (ptr as *mut c_void) as *const U,
                     stack_mem.as_mut_ptr(),
-                    mem::size_of::<U>(),
+                    1,
                 );
                 let stack_mem = stack_mem.assume_init();
                 mem::drop(stack_mem);

@@ -1,8 +1,8 @@
 use crate::gl::OptionGlContextPtr;
 use crate::{
     app_resources::{
-        Epoch, GlTextureCache, IdNamespace, ImageCache, ImageMask, ImageRef, RendererResources,
-        ResourceUpdate, DpiScaleFactor,
+        DpiScaleFactor, Epoch, GlTextureCache, IdNamespace, ImageCache, ImageMask, ImageRef,
+        RendererResources, ResourceUpdate,
     },
     callbacks::{Callback, HitTestItem, UpdateImageType},
     callbacks::{
@@ -25,8 +25,8 @@ use alloc::collections::btree_map::BTreeMap;
 use alloc::collections::btree_set::BTreeSet;
 use alloc::vec::Vec;
 use azul_css::{
-    AzString, ColorU, CssPath, CssProperty, LayoutPoint, LayoutRect, LayoutSize, OptionAzString,
-    OptionF32, OptionI32, U8Vec, FloatValue,
+    AzString, ColorU, CssPath, CssProperty, FloatValue, LayoutPoint, LayoutRect, LayoutSize,
+    OptionAzString, OptionF32, OptionI32, U8Vec,
 };
 use core::{
     cmp::Ordering,
@@ -569,6 +569,7 @@ impl ScrollStates {
         let mut should_scroll_render = false;
 
         for hit_test in hit_test.hovered_nodes.values() {
+            #[allow(clippy::never_loop)]
             for scroll_hit_test_item in hit_test.scroll_hit_test_nodes.values() {
                 self.scroll_node(&scroll_hit_test_item.scroll_node, *scroll_x, *scroll_y);
                 should_scroll_render = true;
@@ -700,7 +701,9 @@ pub struct WindowInternal {
 
 impl WindowInternal {
     pub fn get_dpi_scale_factor(&self) -> DpiScaleFactor {
-        DpiScaleFactor { inner: FloatValue::new(self.current_window_state.size.get_hidpi_factor()) }
+        DpiScaleFactor {
+            inner: FloatValue::new(self.current_window_state.size.get_hidpi_factor()),
+        }
     }
 }
 
@@ -858,7 +861,9 @@ impl WindowInternal {
             &fc_cache_real,
             &callbacks,
             &mut inital_renderer_resources,
-            DpiScaleFactor { inner: FloatValue::new(init.window_create_options.state.size.get_hidpi_factor()) },
+            DpiScaleFactor {
+                inner: FloatValue::new(init.window_create_options.state.size.get_hidpi_factor()),
+            },
         );
 
         let scroll_states = ScrollStates::default();
@@ -918,7 +923,7 @@ impl WindowInternal {
     }
 
     /// Calls the layout function again and updates the self.internal.gl_texture_cache field
-    #[cfg(all(feature = "multithreading"))]
+    #[cfg(feature = "multithreading")]
     pub fn regenerate_styled_dom<F>(
         &mut self,
         data: &mut RefAny,
@@ -2796,7 +2801,7 @@ impl_vec_eq!(LogicalRect, LogicalRectVec);
 use core::ops::AddAssign;
 use core::ops::SubAssign;
 
-#[derive(Default, Copy, Clone, PartialEq, PartialOrd)]
+#[derive(Default, Copy, Clone, PartialEq)]
 #[repr(C)]
 pub struct LogicalPosition {
     pub x: f32,
@@ -2878,6 +2883,12 @@ impl Ord for LogicalPosition {
     }
 }
 
+impl PartialOrd for LogicalPosition {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Eq for LogicalPosition {}
 
 impl Hash for LogicalPosition {
@@ -2892,7 +2903,7 @@ impl Hash for LogicalPosition {
     }
 }
 
-#[derive(Default, Copy, Clone, PartialEq, PartialOrd)]
+#[derive(Default, Copy, Clone, PartialEq)]
 #[repr(C)]
 pub struct LogicalSize {
     pub width: f32,
@@ -2934,6 +2945,12 @@ impl Ord for LogicalSize {
         self_width
             .cmp(&other_width)
             .then(self_height.cmp(&other_height))
+    }
+}
+
+impl PartialOrd for LogicalSize {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
 

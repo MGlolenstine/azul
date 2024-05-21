@@ -31,7 +31,6 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 #[derive(PartialEq, Eq, Debug, Clone, Copy)]
 pub enum Script {
     // Keep this in alphabetic order (for C bindings)
@@ -61,6 +60,38 @@ pub enum Script {
     Thai,
 }
 
+impl Script {
+    pub fn name(&self) -> String {
+        match self {
+            Script::Arabic => "Arabic",
+            Script::Bengali => "Bengali",
+            Script::Cyrillic => "Cyrillic",
+            Script::Devanagari => "Devanagari",
+            Script::Ethiopic => "Ethiopic",
+            Script::Georgian => "Georgian",
+            Script::Greek => "Greek",
+            Script::Gujarati => "Gujarati",
+            Script::Gurmukhi => "Gurmukhi",
+            Script::Hangul => "Hangul",
+            Script::Hebrew => "Hebrew",
+            Script::Hiragana => "Hiragana",
+            Script::Kannada => "Kannada",
+            Script::Katakana => "Katakana",
+            Script::Khmer => "Khmer",
+            Script::Latin => "Latin",
+            Script::Malayalam => "Malayalam",
+            Script::Mandarin => "Mandarin",
+            Script::Myanmar => "Myanmar",
+            Script::Oriya => "Oriya",
+            Script::Sinhala => "Sinhala",
+            Script::Tamil => "Tamil",
+            Script::Telugu => "Telugu",
+            Script::Thai => "Thai",
+        }
+        .to_string()
+    }
+}
+
 // Is it space, punctuation or digit?
 // Stop character is a character that does not give any value for script
 // or language detection.
@@ -75,7 +106,7 @@ type ScriptCounter = (Script, fn(char) -> bool, usize);
 ///
 /// # Example
 /// ```
-/// use whatlang::{detect_script, Script};
+/// use azul_text_layout::script::{Script, detect_script};
 /// let script = detect_script("Благодаря Эсперанто вы обрётете друзей по всему миру!").unwrap();
 /// assert_eq!(script, Script::Cyrillic);
 /// ```

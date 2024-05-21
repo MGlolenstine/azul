@@ -493,6 +493,7 @@ impl CssPropertyCache {
 
                 // workaround for "goto end" - early break if
                 // one of the conditions is true
+                #[allow(clippy::never_loop)]
                 loop {
                     // check for display: none
                     let display = self
